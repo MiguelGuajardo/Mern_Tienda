@@ -1,4 +1,5 @@
 const Product = require("../models/ProductModel")
+const Features = require("../utils/Features")
 
 /* CREATE PRODUCT ---Admin */
 exports.createProduct = async (req,res,next)=>{
@@ -12,7 +13,11 @@ exports.createProduct = async (req,res,next)=>{
 
 /* GET ALL PRODUCTS  */
 exports.getAllProducts = async (req,res,next)=>{
-    const products = await Product.find()
+    const resultPerPage = 8
+
+    const feature = new Features(Product.find(), req.query).search().filter().pagination(resultPerPage)
+
+    const products = await feature.query
 
     res.status(200).json({
         success:true,
